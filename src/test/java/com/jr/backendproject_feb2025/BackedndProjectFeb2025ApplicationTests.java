@@ -1,4 +1,4 @@
-package com.jr.backedndproject_feb2025;
+package com.jr.backendproject_feb2025;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

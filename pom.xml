@@ -9,10 +9,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.jr</groupId>
-    <artifactId>BackedndProject_Feb2025</artifactId>
+    <artifactId>BackendProject_Feb2025</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>BackedndProject_Feb2025</name>
-    <description>BackedndProject_Feb2025</description>
+    <name>BackendProject_Feb2025</name>
+    <description>BackendProject_Feb2025</description>
     <url/>
     <licenses>
         <license/>
@@ -58,7 +58,8 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <optional>true</optional>
+            <version>1.18.36</version> <!-- Use the latest version -->
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>

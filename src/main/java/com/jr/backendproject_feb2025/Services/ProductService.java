@@ -1,13 +1,11 @@
-package com.jr.backedndproject_feb2025.Services;
+package com.jr.backendproject_feb2025.Services;
 
-import com.jr.backedndproject_feb2025.Models.Product;
+import com.jr.backendproject_feb2025.Models.Product;
 
 import java.util.List;
 
 public interface ProductService {
  Product getProductById(Long id);
-
- Product getProductByTitle(String title);
 
  List<Product> getAllProducts();
 

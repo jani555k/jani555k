@@ -1,7 +1,7 @@
-package com.jr.backedndproject_feb2025.Controllers;
+package com.jr.backendproject_feb2025.Controllers;
 
-import com.jr.backedndproject_feb2025.Models.Product;
-import com.jr.backedndproject_feb2025.Services.ProductService;
+import com.jr.backendproject_feb2025.Models.Product;
+import com.jr.backendproject_feb2025.Services.ProductService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.List;
 @RequestMapping("/Products")
 public class ProductController {
 
-    private ProductService productService;
+    private final ProductService productService;
 
     public ProductController(ProductService productService) {
         this.productService = productService;
@@ -19,11 +19,6 @@ public class ProductController {
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable("id") Long id){
         return productService.getProductById(id);
-    }
-
-    @GetMapping("/{title}")
-    public Product getProductByTitle(@PathVariable("title") String title){
-        return productService.getProductByTitle(title);
     }
 
     @GetMapping()
@@ -48,7 +43,7 @@ public class ProductController {
 
     @DeleteMapping()
     public void deleteProduct(Long id){
-
+        productService.deleteProduct(id);
     }
 
 }
