@@ -4,13 +4,17 @@ import com.jr.backendproject_feb2025.DTOs.FakestoreProductDTO;
 import com.jr.backendproject_feb2025.Models.Category;
 import com.jr.backendproject_feb2025.Models.Product;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpMessageConverterExtractor;
 import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.jr.backendproject_feb2025.DTOs.FakestoreProductDTO.convertProductToFakestoreProduct;
 
 @Service
 public class FakestoreAPIService implements ProductService{
@@ -24,7 +28,7 @@ public class FakestoreAPIService implements ProductService{
     @Override
     public Product getProductById(Long id) {
         FakestoreProductDTO fakestoreProductDTO = restTemplate.getForObject("https://fakestoreapi.com/products/" + id, FakestoreProductDTO.class);
-        return ConvertFakestoreProductToProduct(fakestoreProductDTO);
+        return Product.convertFakestoreProductToProduct(fakestoreProductDTO);
     }
 
     @Override
@@ -33,7 +37,7 @@ public class FakestoreAPIService implements ProductService{
 
         List<Product> products = new ArrayList<>();
         for(FakestoreProductDTO fakestoreProductDTO1 : fakestoreProductDTO){
-            products.add(ConvertFakestoreProductToProduct(fakestoreProductDTO1));
+            products.add(Product.convertFakestoreProductToProduct(fakestoreProductDTO1));
         }
 
         return products;
@@ -41,40 +45,40 @@ public class FakestoreAPIService implements ProductService{
 
     @Override
     public Product addProduct(Product product) {
+        FakestoreProductDTO fakestoreProductDTO = convertProductToFakestoreProduct(product);
 
-        return restTemplate.postForObject("https://fakestoreapi.com/products", product, Product.class);
+        FakestoreProductDTO response = restTemplate.postForObject(
+                "https://fakestoreapi.com/products", fakestoreProductDTO, FakestoreProductDTO.class);
+
+        return Product.convertFakestoreProductToProduct(response);
+
     }
 
     @Override
-    public Product updateProduct(Product product) {
+    public Product updateProduct(Long id, Product product) {
+        FakestoreProductDTO fakestoreProductDTO = FakestoreProductDTO.convertProductToFakestoreProduct(product);
 
-        return restTemplate.patchForObject("https://fakestoreapi.com/products/" + product.getId(), product, Product.class);
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(fakestoreProductDTO, FakestoreProductDTO.class);
+        HttpMessageConverterExtractor<FakestoreProductDTO> responseExtractor = new HttpMessageConverterExtractor(FakestoreProductDTO.class, restTemplate.getMessageConverters());
+        FakestoreProductDTO response = restTemplate.execute("https://fakestoreapi.com/products/" + id, HttpMethod.PATCH, requestCallback, responseExtractor);
+
+        return Product.convertFakestoreProductToProduct(response);
     }
 
     @Override
-    public Product replaceProduct(Product product) {
+    public Product replaceProduct(Long id, Product product) {
+        FakestoreProductDTO fakestoreProductDTO = FakestoreProductDTO.convertProductToFakestoreProduct(product);
 
-        return new Product();
+        RequestCallback requestCallback = restTemplate.httpEntityCallback(fakestoreProductDTO, FakestoreProductDTO.class);
+        HttpMessageConverterExtractor<FakestoreProductDTO> responseExtractor = new HttpMessageConverterExtractor(FakestoreProductDTO.class, restTemplate.getMessageConverters());
+        FakestoreProductDTO response = restTemplate.execute("https://fakestoreapi.com/products/" + id, HttpMethod.PUT, requestCallback, responseExtractor);
+
+        return Product.convertFakestoreProductToProduct(response);
+
     }
 
     @Override
     public void deleteProduct(Long id) {
         restTemplate.delete("https://fakestoreapi.com/products/" + id);
-    }
-
-    private Product ConvertFakestoreProductToProduct(FakestoreProductDTO fakestoreProductDTO) {
-        Product product = new Product();
-
-        product.setId(fakestoreProductDTO.getId());
-        product.setTitle(fakestoreProductDTO.getTitle());
-        product.setDescription(fakestoreProductDTO.getDescription());
-        product.setPrice(fakestoreProductDTO.getPrice());
-
-        Category category = new Category();
-        category.setTitle(fakestoreProductDTO.getCategory());
-        product.setCategory(category);
-
-        return product;
-
     }
 }

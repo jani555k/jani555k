@@ -27,22 +27,22 @@ public class ProductController {
     }
 
     @PostMapping()
-    public Product addProduct(Product product){
+    public Product addProduct(@RequestBody Product product){
         return productService.addProduct(product);
     }
 
-    @PatchMapping()
-    public Product updateProduct(Product product){
-        return productService.updateProduct(product);
+    @PatchMapping("/{id}")
+    public Product updateProduct(@PathVariable("id") Long id, @RequestBody Product product){
+        return productService.updateProduct(id, product);
     }
 
-    @PutMapping()
-    public Product replaceProduct(Product product){
-        return productService.replaceProduct(product);
+    @PutMapping("/{id}")
+    public Product replaceProduct(@PathVariable("id") Long id, @RequestBody Product product){
+        return productService.replaceProduct(id, product);
     }
 
-    @DeleteMapping()
-    public void deleteProduct(Long id){
+    @DeleteMapping("/{id}")
+    public void deleteProduct(@PathVariable("id") Long id){
         productService.deleteProduct(id);
     }
 

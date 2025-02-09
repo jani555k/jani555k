@@ -11,10 +11,10 @@ public interface ProductService {
 
  Product addProduct(Product product);
 
- Product updateProduct(Product product);
+ Product updateProduct(Long id, Product product);
+
+ Product replaceProduct(Long id, Product product);
 
  void deleteProduct(Long id);
-
- Product replaceProduct(Product product);
 
 }
